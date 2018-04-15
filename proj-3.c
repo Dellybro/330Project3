@@ -14,7 +14,7 @@ int rc = 0, wc = 0, rwc = 0, wwc = 0;
 void reader(){
     
     while( 1 > 0 ){
-        printf("Reader Started");
+        printf("Reader Started\n");
 
         P(mutex);
         if(wwc > 0 || wc > 0){
@@ -30,7 +30,7 @@ void reader(){
 
         /* Read */
         sleep(1);
-        printf("Reader read");
+        printf("Reader read\n");
 
         P(mutex);
         rc--;
@@ -44,7 +44,7 @@ void reader(){
 void writer(){
 
     while( 1 > 0){
-        printf("Writer Started");
+        printf("Writer Started\n");
 
         P(mutex);
         if(rc > 0 || wc > 0){
@@ -60,7 +60,7 @@ void writer(){
 
         /* Write */
         sleep(1);
-        printf("Writer wrote");
+        printf("Writer wrote\n");
 
         P(mutex);
         wc--;
@@ -82,7 +82,7 @@ void writer(){
 
 
 int main(){
-    printf("Started Program");
+    printf("Started Program\n");
 
     RunQ = InitQueue();
 
