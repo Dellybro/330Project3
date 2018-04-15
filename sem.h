@@ -27,14 +27,12 @@ Semaphore * InitSem(int value) {
 
 // Take resource
 void P(Semaphore * sem) {
-    if(sem->value > 0){
-        sem->value--;
-    } else {
+
+    sem->value--;
+    if(sem->value < 0){
         TCB_t * tcb = DelQueue(RunQ);
         AddQueue(sem->tcb_queue, tcb);
         swapcontext(&tcb->context, &RunQ->head->context);
-
-        P(sem);
     }
 }
 
