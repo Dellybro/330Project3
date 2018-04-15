@@ -18,24 +18,23 @@ Semaphore * InitSem(int value);
 void P(Semaphore * sem);
 void V(Semaphore * sem);
 
-Semaphore * InitSem(int value)
-{
-    Semaphore * sem = ALLOC(Semaphore);
+Semaphore * InitSem(int value) {
+    Semaphore * sem = malloc(sizeof(Semaphore));
     sem->value = value;
     sem->tcb_queue = InitQueue();
     return sem;
 }
 
 // Take resource
-void P(Semaphore * sem)
-{
-    sem->value--;
-    if(sem->value < 0)
-    {
-        //printf("\nBlocked\n");
+void P(Semaphore * sem) {
+    if(sem->value > 0){
+        sem->value--;
+    } else {
         TCB_t * tcb = DelQueue(RunQ);
         AddQueue(sem->tcb_queue, tcb);
         swapcontext(&tcb->context, &RunQ->head->context);
+
+        P(sem);
     }
 }
 
@@ -43,9 +42,7 @@ void P(Semaphore * sem)
 void V(Semaphore * sem)
 {
     sem->value++;
-    if (sem->value <= 0)
-    {
-        //printf("\nAdded to RunQ\n");
+    if (sem->value <= 0){
         TCB_t * tcb = DelQueue(sem->tcb_queue);
         AddQueue(RunQ, tcb);
     }
