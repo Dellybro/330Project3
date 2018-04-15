@@ -49,6 +49,17 @@ struct Queue * InitQueue()
     return ALLOC(Queue);
 }
 
+struct TCB_t *newTCB(int threadId){
+    struct TCB_t* node = (struct TCB_t*)malloc (sizeof (struct TCB_t));
+    node->payload = threadId;
+    node->prev = NULL;
+    node->next = NULL;
+
+    totalQueues++;
+    
+    return node;
+}
+
 void AddQueue(Queue * queue, TCB_t * element)
 {
     if(queue->head == NULL)
