@@ -14,7 +14,6 @@ int rc = 0, wc = 0, rwc = 0, wwc = 0;
 void reader(){
     
     while( 1 > 0 ){
-        printf("Reader Started\n");
 
         P(mutex);
         if(wwc > 0 || wc > 0){
@@ -44,7 +43,6 @@ void reader(){
 void writer(){
 
     while( 1 > 0){
-        printf("Writer Started\n");
 
         P(mutex);
         if(rc > 0 || wc > 0){
