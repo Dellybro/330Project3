@@ -18,18 +18,19 @@ Semaphore * InitSem(int value);
 void P(Semaphore * sem);
 void V(Semaphore * sem);
 
-Semaphore * InitSem(int value) {
-    Semaphore * sem = malloc(sizeof(Semaphore));
+Semaphore * InitSem(int value)
+{
+    Semaphore * sem = malloc (sizeof (struct Semaphore));;
     sem->value = value;
     sem->tcb_queue = InitQueue();
     return sem;
 }
 
 // Take resource
-void P(Semaphore * sem) {
-
+void P(Semaphore * sem)
+{
     sem->value--;
-    if(sem->value < 0){
+    if(sem->value < 0) {
         TCB_t * tcb = DelQueue(RunQ);
         AddQueue(sem->tcb_queue, tcb);
         swapcontext(&tcb->context, &RunQ->head->context);

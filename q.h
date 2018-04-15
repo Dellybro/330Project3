@@ -53,7 +53,7 @@ void AddQueue(Queue * queue, TCB_t * element)
         element->prev = tail;
         tail = tail->next;
 
-        // To make queue circular
+
         tail->next = queue->head;
         queue->head->prev = tail;
     }
@@ -72,12 +72,10 @@ struct TCB_t * DelQueue(Queue * queue)
         TCB_t * temp = queue->head;
         TCB_t * tail = queue->head->prev;
 
-        // Only 1 element
         if(queue->head->next == queue->head){
             queue->head = NULL;
         }else {
             queue->head = queue->head->next;
-            // To make queue circular
             queue->head->prev = tail;
             tail->next = queue->head;
         }
