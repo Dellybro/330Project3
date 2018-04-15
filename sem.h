@@ -25,7 +25,7 @@ void P(Semaphore *sem) {
 
 		struct TCB_t *current = DelQueue(RunQ);
 		AddQueue(RunQ, current);
-		swapcontext(&(current->context), &(RunQ->head->context));
+		swapcontext(&current->context, &RunQ->head->context);
 
         /* Thread finishes */
 
