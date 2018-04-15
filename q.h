@@ -14,17 +14,7 @@ typedef struct Queue {
     struct TCB_t *head;
 } Queue;
 
-
-int totalQueues;
-
 struct Queue *RunQ;
-
-TCB_t * newTCB();
-Queue * InitQueue();
-void AddQueue(Queue * queue, TCB_t * tcb);
-TCB_t * DelQueue(Queue * queue);
-void RotateQ(Queue * queue);
-
 
 struct Queue * InitQueue() {
     return malloc(sizeof(Queue));

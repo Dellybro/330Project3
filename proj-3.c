@@ -84,9 +84,9 @@ int main(){
 
     RunQ = InitQueue();
 
-	R_sem = InitSem(0);
-	W_sem = InitSem(0);
-    mutex = InitSem(1);
+	InitSem(R_sem, 0);
+	InitSem(W_sem, 0);
+    InitSem(mutex, 1);
 
     start_thread(writer,1);
     start_thread(writer,2);
