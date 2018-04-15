@@ -79,8 +79,7 @@ void writer(){
 
 
 int main(){
-    RunQ = (struct Queue*)malloc (sizeof (struct Queue));
-    RunQ->head = NULL;
+    runQ = InitQueue();
 
 	R_sem = InitSem(0);
 	W_sem = InitSem(0);
