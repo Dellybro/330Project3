@@ -10,11 +10,6 @@
 #include <string.h>
 #include <ucontext.h>
 
-
-typedef struct Queue {
-    struct TCB_t *head;
-} Queue;
-
 typedef struct TCB_t {
     struct TCB_t *prev;
     struct TCB_t *next;

@@ -82,9 +82,9 @@ int main(){
     RunQ = (struct Queue*)malloc (sizeof (struct Queue));
     RunQ->head = NULL;
 
-	InitSem(R_sem, 0);
-	InitSem(W_sem, 0);
-    InitSem(mutex, 1);
+	R_sem = InitSem(0);
+	W_sem = InitSem(0);
+    mutex = InitSem(1);
 
     start_thread(writer,1);
     start_thread(writer,2);

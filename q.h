@@ -10,109 +10,104 @@
 #include <stdlib.h>
 #include "tcb.h"
 
+typedef struct Queue {
+    struct TCB_t *head;
+} Queue;
+
+
+#define ALLOC(t) (t*) calloc(1, sizeof(t))
+
 int totalQueues;
 
-void printQ(struct Queue *list){
-    struct TCB_t *current = list->head;
-    /* Make sure current isn't null */
-    if(current == NULL){
-        return;
-    }else if(current->next == NULL){
-        /* if no next, only print current payload */
-        printf("Current: %i \n", current->payload);
-    } else {
-        /* Loop until current next is head while printing */
-        while(current->next != list->head){
-            printf("Current: %i \n", current->payload);
-            current = current->next;
-        }
-        printf("Current: %i \n", current->payload);
+// Global Queue variable
+Queue * runQ;
+
+// Declare all functions available
+TCB_t * NewItem();
+Queue * InitQueue();
+void AddQueue(Queue * queue, TCB_t * tcb);
+TCB_t * DelQueue(Queue * queue);
+void RotateQ(Queue * queue);
+
+/*==========================================
+ *      Queue Function Implementations
+ *==========================================*/
+
+struct TCB_t * NewItem()
+{
+    /* Uses calloc macro. Calloc is not necessary over
+     * malloc, since memset is called on the memory
+     * later on in init_TCB. */
+    TCB_t * element = ALLOC(TCB_t);
+    element->prev = NULL;
+    element->next = NULL;
+    return element;
+}
+
+struct Queue * InitQueue()
+{
+    return ALLOC(Queue);
+}
+
+void AddQueue(Queue * queue, TCB_t * element)
+{
+    if(queue->head == NULL)
+    {
+        queue->head = element;
+        queue->head->prev = queue->head;
+        queue->head->next = queue->head;
+    }
+    else
+    {
+        TCB_t * tail = queue->head->prev;
+        tail->next = element;
+        element->prev = tail;
+        tail = tail->next;
+
+        // To make queue circular
+        tail->next = queue->head;
+        queue->head->prev = tail;
     }
 }
 
-
-struct TCB_t *newTCB(int threadId){
-    struct TCB_t* node = (struct TCB_t*)malloc (sizeof (struct TCB_t));
-    node->payload = threadId;
-    node->prev = NULL;
-    node->next = NULL;
-
-    totalQueues++;
-    
-    return node;
-}
-
-/* Sets up the queue? */
-void initQueue(struct Queue *list){
-    list = (struct Queue*)malloc (sizeof (struct Queue));
-    list->head = NULL;
-}
-
-/* Deletes head of queue */
-struct TCB_t *DelQueue(struct Queue *list){
-    if(list->head == NULL){
+struct TCB_t * DelQueue(Queue * queue)
+{
+    // No elements
+    if(queue->head == NULL)
+    {
         return NULL;
     }
-
-
-    struct TCB_t* previousHead = list->head;
-    if(previousHead->next == NULL){
-        list->head = NULL;
-        return previousHead;
+    // One element
+    else if (queue->head->next == queue->head)
+    {
+        TCB_t * temp = queue->head;
+        queue->head = NULL;
+        return temp;
     }
+    // Multiple elements
+    else
+    {
+        TCB_t * temp = queue->head;
+        TCB_t * tail = queue->head->prev;
 
-    struct TCB_t* tail = previousHead->prev;
-    struct TCB_t* newHead = previousHead->next;
-    
-    //Make head = to head->next
-    //make new head prev = to previousHead previous
-    //Make the last node next = to new list head
-    tail->next = newHead;
-    newHead->prev = tail;
-    list->head = newHead;
-
-
-    previousHead->next = NULL;
-    previousHead->prev = NULL;
-
-    return previousHead;
-}
-
-/* Adds to tail. */
-void AddQueue(Queue *list, TCB_t *newItem){
-
-    if(list->head == NULL){
-        list->head = newItem;
-        return;
-    } else {
-
-        struct TCB_t *current = list->head;
-
-        if(current->next == NULL){
-            current->next = newItem;
-            current->prev = newItem;
-            newItem->next = current;
-            newItem->prev = current;
-        } else {
-
-            while(current->next != list->head){
-                current = current->next;
-            }
-
-            current->next = newItem;
-            newItem->prev = current;
-            newItem->next = list->head;
-            list->head->prev = newItem;
+        // Only 1 element
+        if(queue->head->next == queue->head)
+        {
+            queue->head = NULL;
         }
+            // Multiple elements
+        else
+        {
+            queue->head = queue->head->next;
+            // To make queue circular
+            queue->head->prev = tail;
+            tail->next = queue->head;
+        }
+        return temp;
     }
-    
 }
 
-
-/* counter clock wise, 123 becomes 231, use delqueue to pop off 1 and than put it at tail of queue */
-void RotateQ(struct Queue *list){
-    struct TCB_t *deleted = DelQueue(list);
-    if(deleted){
-        AddQueue(list, deleted);
-    }
+void RotateQ(Queue * queue)
+{
+    queue->head = queue->head->next;
 }

@@ -7,39 +7,47 @@
 
 #include "threads.h"
 
-typedef struct Semaphore {
+typedef struct Semaphore
+{
     int value;
+    Queue * tcb_queue;
 } Semaphore;
 
-void InitSem(Semaphore *sem, int value){
-    sem = malloc(sizeof(Semaphore));
+Semaphore * InitSem(int value);
+
+void P(Semaphore * sem);
+void V(Semaphore * sem);
+
+Semaphore * InitSem(int value)
+{
+    Semaphore * sem = ALLOC(Semaphore);
     sem->value = value;
+    sem->tcb_queue = InitQueue();
+    return sem;
 }
 
-void P(Semaphore *sem) {
-
-    if ( sem->value > 0){
-        sem->value--;
-    } else {
-        
-
-		struct TCB_t *current = DelQueue(RunQ);
-		AddQueue(RunQ, current);
-		swapcontext(&current->context, &RunQ->head->context);
-
-        /* Thread finishes */
-
-        P(sem);  
+// Take resource
+void P(Semaphore * sem)
+{
+    sem->value--;
+    if(sem->value < 0)
+    {
+        //printf("\nBlocked\n");
+        TCB_t * tcb = DelQueue(runQ);
+        AddQueue(sem->tcb_queue, tcb);
+        swapcontext(&tcb->context, &runQ->head->context);
     }
 }
 
-void V(Semaphore *sem){
+// Release resource
+void V(Semaphore * sem)
+{
     sem->value++;
-
-
-    if (sem->value <= 0) {	
-		RotateQ(RunQ);
-	}
-
-	yield();
+    if (sem->value <= 0)
+    {
+        //printf("\nAdded to runQ\n");
+        TCB_t * tcb = DelQueue(sem->tcb_queue);
+        AddQueue(runQ, tcb);
+    }
+    yield();
 }
