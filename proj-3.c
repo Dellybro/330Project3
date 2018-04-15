@@ -9,11 +9,13 @@
 #include "sem.h"
 
 Semaphore  *R_sem, *W_sem, *mutex;
-int rc, wc, rwc, wwc = 0;
+int rc = 0, wc = 0, rwc = 0, wwc = 0;
 
 void reader(){
-
+    
     while( 1 > 0 ){
+        printf("Reader Started");
+
         P(mutex);
         if(wwc > 0 || wc > 0){
             rwc++;
@@ -42,6 +44,7 @@ void reader(){
 void writer(){
 
     while( 1 > 0){
+        printf("Writer Started");
 
         P(mutex);
         if(rc > 0 || wc > 0){
@@ -79,6 +82,8 @@ void writer(){
 
 
 int main(){
+    printf("Started Program");
+
     RunQ = InitQueue();
 
 	R_sem = InitSem(0);
