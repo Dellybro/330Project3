@@ -14,6 +14,9 @@ typedef struct Queue {
     struct TCB_t *head;
 } Queue;
 
+
+int totalQueues;
+
 struct Queue *RunQ;
 
 struct Queue * InitQueue() {
