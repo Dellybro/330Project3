@@ -9,7 +9,6 @@
 #include <stdlib.h>
 #include "q.h"
 
-struct Queue *RunQ;
 int global = 0;
 
 void start_thread(void (*function)(void), int threadId){

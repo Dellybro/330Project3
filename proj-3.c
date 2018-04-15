@@ -79,7 +79,7 @@ void writer(){
 
 
 int main(){
-    runQ = InitQueue();
+    RunQ = InitQueue();
 
 	R_sem = InitSem(0);
 	W_sem = InitSem(0);

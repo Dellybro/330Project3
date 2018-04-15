@@ -33,9 +33,9 @@ void P(Semaphore * sem)
     if(sem->value < 0)
     {
         //printf("\nBlocked\n");
-        TCB_t * tcb = DelQueue(runQ);
+        TCB_t * tcb = DelQueue(RunQ);
         AddQueue(sem->tcb_queue, tcb);
-        swapcontext(&tcb->context, &runQ->head->context);
+        swapcontext(&tcb->context, &RunQ->head->context);
     }
 }
 
@@ -45,9 +45,9 @@ void V(Semaphore * sem)
     sem->value++;
     if (sem->value <= 0)
     {
-        //printf("\nAdded to runQ\n");
+        //printf("\nAdded to RunQ\n");
         TCB_t * tcb = DelQueue(sem->tcb_queue);
-        AddQueue(runQ, tcb);
+        AddQueue(RunQ, tcb);
     }
     yield();
 }

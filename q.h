@@ -20,7 +20,8 @@ typedef struct Queue {
 int totalQueues;
 
 // Global Queue variable
-Queue * runQ;
+
+struct Queue *RunQ;
 
 // Declare all functions available
 TCB_t * NewItem();
