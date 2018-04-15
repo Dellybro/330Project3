@@ -13,10 +13,14 @@ typedef struct Semaphore
     Queue * tcb_queue;
 } Semaphore;
 
+Semaphore * InitSem(int value);
 
-Semaphore * InitSem(Semaphore* sem, int value)
+void P(Semaphore * sem);
+void V(Semaphore * sem);
+
+Semaphore * InitSem(int value)
 {
-    sem = malloc (sizeof (struct Semaphore));;
+    Semaphore * sem = malloc (sizeof (struct Semaphore));;
     sem->value = value;
     sem->tcb_queue = InitQueue();
     return sem;
