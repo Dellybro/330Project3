@@ -62,8 +62,10 @@ void writer(){
         P(mutex);
         wc--;
         if(rwc > 0){
-            for(int i = 0; i < rwc; i++){
+            int i = 0;
+            while(i < rwc){
                 V(R_sem); //Loop through readers and allows them to read
+                i++;
             }
         } else if(wwc > 0){
             V(W_sem);
@@ -89,6 +91,8 @@ int main(){
     start_thread(reader,3);
     start_thread(reader,4);
     start_thread(reader,5);
+
+    run();
 
     return 1;
 }
